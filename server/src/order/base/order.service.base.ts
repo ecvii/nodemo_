@@ -58,11 +58,14 @@ export class OrderServiceBase {
       .cart(args);
   }
 
-  async getCreatedBy(parentId: string): Promise<User | null> {
+  async findCreatedBy(
+    parentId: string,
+    args: Prisma.UserFindManyArgs
+  ): Promise<User[]> {
     return this.prisma.order
       .findUnique({
         where: { id: parentId },
       })
-      .createdBy();
+      .createdBy(args);
   }
 }

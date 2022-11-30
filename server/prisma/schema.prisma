@@ -30,10 +30,9 @@ model Product {
 }
 
 model Order {
-  cart        Product[]
-  createdAt   DateTime  @default(now())
-  createdBy   User?     @relation(fields: [createdById], references: [id])
-  createdById String?
-  id          String    @id @default(cuid())
-  updatedAt   DateTime  @updatedAt
+  cart      Product[]
+  createdAt DateTime  @default(now())
+  createdBy User[]
+  id        String    @id @default(cuid())
+  updatedAt DateTime  @updatedAt
 }

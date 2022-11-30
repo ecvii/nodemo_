@@ -14,7 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ProductListRelationFilter } from "../../product/base/ProductListRelationFilter";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 import { StringFilter } from "../../util/StringFilter";
 @InputType()
 class OrderWhereInput {
@@ -32,15 +32,15 @@ class OrderWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => UserListRelationFilter,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => UserListRelationFilter)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => UserListRelationFilter, {
     nullable: true,
   })
-  createdBy?: UserWhereUniqueInput;
+  createdBy?: UserListRelationFilter;
 
   @ApiProperty({
     required: false,

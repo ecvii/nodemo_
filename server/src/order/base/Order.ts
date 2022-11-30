@@ -36,12 +36,12 @@ class Order {
 
   @ApiProperty({
     required: false,
-    type: () => User,
+    type: () => [User],
   })
   @ValidateNested()
   @Type(() => User)
   @IsOptional()
-  createdBy?: User | null;
+  createdBy?: Array<User>;
 
   @ApiProperty({
     required: true,

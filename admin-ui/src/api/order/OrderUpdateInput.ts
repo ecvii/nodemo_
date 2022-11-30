@@ -1,7 +1,7 @@
 import { ProductUpdateManyWithoutOrdersInput } from "./ProductUpdateManyWithoutOrdersInput";
-import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
+import { UserUpdateManyWithoutOrdersInput } from "./UserUpdateManyWithoutOrdersInput";
 
 export type OrderUpdateInput = {
   cart?: ProductUpdateManyWithoutOrdersInput;
-  createdBy?: UserWhereUniqueInput | null;
+  createdBy?: UserUpdateManyWithoutOrdersInput;
 };

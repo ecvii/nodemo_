@@ -14,7 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ProductUpdateManyWithoutOrdersInput } from "./ProductUpdateManyWithoutOrdersInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { UserUpdateManyWithoutOrdersInput } from "./UserUpdateManyWithoutOrdersInput";
 @InputType()
 class OrderUpdateInput {
   @ApiProperty({
@@ -31,14 +31,14 @@ class OrderUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => UserUpdateManyWithoutOrdersInput,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => UserUpdateManyWithoutOrdersInput)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => UserUpdateManyWithoutOrdersInput, {
     nullable: true,
   })
-  createdBy?: UserWhereUniqueInput | null;
+  createdBy?: UserUpdateManyWithoutOrdersInput;
 }
 export { OrderUpdateInput };
