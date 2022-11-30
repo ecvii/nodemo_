@@ -1,2 +1,3 @@
 node demo
-entities: orders, products
+entities: orders, products, users
+
