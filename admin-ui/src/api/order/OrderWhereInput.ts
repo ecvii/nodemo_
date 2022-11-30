@@ -1,9 +1,9 @@
 import { ProductListRelationFilter } from "../product/ProductListRelationFilter";
-import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
+import { UserListRelationFilter } from "../user/UserListRelationFilter";
 import { StringFilter } from "../../util/StringFilter";
 
 export type OrderWhereInput = {
   cart?: ProductListRelationFilter;
-  createdBy?: UserWhereUniqueInput;
+  createdBy?: UserListRelationFilter;
   id?: StringFilter;
 };

@@ -27,6 +27,7 @@ import { OrderFindUniqueArgs } from "./OrderFindUniqueArgs";
 import { Order } from "./Order";
 import { ProductFindManyArgs } from "../../product/base/ProductFindManyArgs";
 import { Product } from "../../product/base/Product";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { OrderService } from "../order.service";
 
@@ -95,15 +96,7 @@ export class OrderResolverBase {
   async createOrder(@graphql.Args() args: CreateOrderArgs): Promise<Order> {
     return await this.service.create({
       ...args,
-      data: {
-        ...args.data,
-
-        createdBy: args.data.createdBy
-          ? {
-              connect: args.data.createdBy,
-            }
-          : undefined,
-      },
+      data: args.data,
     });
   }
 
@@ -120,15 +113,7 @@ export class OrderResolverBase {
     try {
       return await this.service.update({
         ...args,
-        data: {
-          ...args.data,
-
-          createdBy: args.data.createdBy
-            ? {
-                connect: args.data.createdBy,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -182,18 +167,22 @@ export class OrderResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => User, { nullable: true })
+  @graphql.ResolveField(() => [User])
   @nestAccessControl.UseRoles({
     resource: "User",
     action: "read",
     possession: "any",
   })
-  async createdBy(@graphql.Parent() parent: Order): Promise<User | null> {
-    const result = await this.service.getCreatedBy(parent.id);
+  async createdBy(
+    @graphql.Parent() parent: Order,
+    @graphql.Args() args: UserFindManyArgs
+  ): Promise<User[]> {
+    const results = await this.service.findCreatedBy(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return result;
+
+    return results;
   }
 }

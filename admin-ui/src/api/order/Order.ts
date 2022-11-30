@@ -4,7 +4,7 @@ import { User } from "../user/User";
 export type Order = {
   cart?: Array<Product>;
   createdAt: Date;
-  createdBy?: User | null;
+  createdBy?: Array<User>;
   id: string;
   updatedAt: Date;
 };

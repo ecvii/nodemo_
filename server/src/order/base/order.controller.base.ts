@@ -30,6 +30,9 @@ import { Order } from "./Order";
 import { ProductFindManyArgs } from "../../product/base/ProductFindManyArgs";
 import { Product } from "../../product/base/Product";
 import { ProductWhereUniqueInput } from "../../product/base/ProductWhereUniqueInput";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
+import { User } from "../../user/base/User";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class OrderControllerBase {
@@ -49,24 +52,9 @@ export class OrderControllerBase {
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
   async create(@common.Body() data: OrderCreateInput): Promise<Order> {
     return await this.service.create({
-      data: {
-        ...data,
-
-        createdBy: data.createdBy
-          ? {
-              connect: data.createdBy,
-            }
-          : undefined,
-      },
+      data: data,
       select: {
         createdAt: true,
-
-        createdBy: {
-          select: {
-            id: true,
-          },
-        },
-
         id: true,
         updatedAt: true,
       },
@@ -89,13 +77,6 @@ export class OrderControllerBase {
       ...args,
       select: {
         createdAt: true,
-
-        createdBy: {
-          select: {
-            id: true,
-          },
-        },
-
         id: true,
         updatedAt: true,
       },
@@ -119,13 +100,6 @@ export class OrderControllerBase {
       where: params,
       select: {
         createdAt: true,
-
-        createdBy: {
-          select: {
-            id: true,
-          },
-        },
-
         id: true,
         updatedAt: true,
       },
@@ -155,24 +129,9 @@ export class OrderControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: {
-          ...data,
-
-          createdBy: data.createdBy
-            ? {
-                connect: data.createdBy,
-              }
-            : undefined,
-        },
+        data: data,
         select: {
           createdAt: true,
-
-          createdBy: {
-            select: {
-              id: true,
-            },
-          },
-
           id: true,
           updatedAt: true,
         },
@@ -204,13 +163,6 @@ export class OrderControllerBase {
         where: params,
         select: {
           createdAt: true,
-
-          createdBy: {
-            select: {
-              id: true,
-            },
-          },
-
           id: true,
           updatedAt: true,
         },
@@ -313,6 +265,105 @@ export class OrderControllerBase {
   ): Promise<void> {
     const data = {
       cart: {
+        disconnect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  @common.Get("/:id/createdBy")
+  @ApiNestedQuery(UserFindManyArgs)
+  async findManyCreatedBy(
+    @common.Req() request: Request,
+    @common.Param() params: OrderWhereUniqueInput
+  ): Promise<User[]> {
+    const query = plainToClass(UserFindManyArgs, request.query);
+    const results = await this.service.findCreatedBy(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        firstName: true,
+        id: true,
+        lastName: true,
+        roles: true,
+        updatedAt: true,
+        username: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Order",
+    action: "update",
+    possession: "any",
+  })
+  @common.Post("/:id/createdBy")
+  async connectCreatedBy(
+    @common.Param() params: OrderWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      createdBy: {
+        connect: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Order",
+    action: "update",
+    possession: "any",
+  })
+  @common.Patch("/:id/createdBy")
+  async updateCreatedBy(
+    @common.Param() params: OrderWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      createdBy: {
+        set: body,
+      },
+    };
+    await this.service.update({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @nestAccessControl.UseRoles({
+    resource: "Order",
+    action: "update",
+    possession: "any",
+  })
+  @common.Delete("/:id/createdBy")
+  async disconnectCreatedBy(
+    @common.Param() params: OrderWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      createdBy: {
         disconnect: body,
       },
     };
