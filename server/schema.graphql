@@ -48,14 +48,14 @@ type Mutation {
 type Order {
   cart(orderBy: [ProductOrderByInput!], skip: Float, take: Float, where: ProductWhereInput): [Product!]!
   createdAt: DateTime!
-  createdBy: User
+  createdBy(orderBy: [UserOrderByInput!], skip: Float, take: Float, where: UserWhereInput): [User!]!
   id: String!
   updatedAt: DateTime!
 }
 
 input OrderCreateInput {
   cart: ProductCreateNestedManyWithoutOrdersInput
-  createdBy: UserWhereUniqueInput
+  createdBy: UserCreateNestedManyWithoutOrdersInput
 }
 
 input OrderCreateNestedManyWithoutProductsInput {
@@ -74,14 +74,13 @@ input OrderListRelationFilter {
 
 input OrderOrderByInput {
   createdAt: SortOrder
-  createdById: SortOrder
   id: SortOrder
   updatedAt: SortOrder
 }
 
 input OrderUpdateInput {
   cart: ProductUpdateManyWithoutOrdersInput
-  createdBy: UserWhereUniqueInput
+  createdBy: UserUpdateManyWithoutOrdersInput
 }
 
 input OrderUpdateManyWithoutProductsInput {
@@ -98,7 +97,7 @@ input OrderUpdateManyWithoutUsersInput {
 
 input OrderWhereInput {
   cart: ProductListRelationFilter
-  createdBy: UserWhereUniqueInput
+  createdBy: UserListRelationFilter
   id: StringFilter
 }
 
@@ -240,11 +239,21 @@ input UserCreateInput {
   username: String!
 }
 
+input UserCreateNestedManyWithoutOrdersInput {
+  connect: [UserWhereUniqueInput!]
+}
+
 type UserInfo {
   accessToken: String
   id: String!
   roles: [String!]!
   username: String!
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
 }
 
 input UserOrderByInput {
@@ -265,6 +274,12 @@ input UserUpdateInput {
   password: String
   roles: JSON
   username: String
+}
+
+input UserUpdateManyWithoutOrdersInput {
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
 }
 
 input UserWhereInput {
